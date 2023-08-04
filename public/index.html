@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Code Converter</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 800px;
+      background-color: #fff;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      width: 30%;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .form-group select,
+    .form-group input[type="text"],
+    .form-group textarea {
+      flex-grow: 1;
+      padding: 5px;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .button-group button {
+      margin: 0 5px;
+      padding: 10px 20px;
+      font-size: 14px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    #generatedCode {
+      white-space: pre-wrap;
+      padding: 10px;
+      background-color: #f5f5f5;
+      border-radius: 3px;
+      font-family: Consolas, monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="header">Code Converter</h1>
+    <div class="form-group">
+      <label for="code">Code:</label>
+      <textarea id="code" rows="10"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="language">Language:</label>
+      <select id="language">
+        <option value="javascript">JavaScript</option>
+        <option value="python">Python</option>
+        <option value="java">Java</option>
+        <option value="csharp">C#</option>
+      </select>
+    </div>
+    <div class="button-group">
+      <button onclick="convertCode()">Convert</button>
+      <button onclick="debugCode()">Debug</button>
+      <button onclick="checkCodeQuality()">Check Quality</button>
+    </div>
+    <h2>Generated Code:</h2>
+    <pre id="generatedCode"></pre>
+  </div>
+
+  <script>
+    function convertCode() {
+      var code = document.getElementById('code').value;
+      var language = document.getElementById('language').value;
+      var generatedCode = document.getElementById('generatedCode');
+
+      fetch('/convert', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code: code, language: language })
+      })
+        .then(response => response.json())
+        .then(data => {
+            generatedCode.innerHTML = data.response;
+        })
+        .catch(error => {
+          generatedCode.textContent = 'An error occurred while converting the code.';
+          console.error('Error:', error);
+        });
+    }
+
+    function debugCode() {
+        var code = document.getElementById('code').value;
+        var generatedCode = document.getElementById('generatedCode');
+
+        fetch('/debug', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code: code })
+      })
+        .then(response => response.json())
+        .then(data => {
+            generatedCode.innerHTML = data.response;
+        })
+        .catch(error => {
+          generatedCode.textContent = 'An error occurred while converting the code.';
+          console.error('Error:', error);
+        });
+    }
+
+    function checkCodeQuality() {
+        var code = document.getElementById('code').value;
+        var generatedCode = document.getElementById('generatedCode');
+
+        fetch('/quality', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ code: code })
+      })
+        .then(response => response.json())
+        .then(data => {
+            generatedCode.innerHTML = data.response;
+        })
+        .catch(error => {
+          generatedCode.textContent = 'An error occurred while converting the code.';
+          console.error('Error:', error);
+        });
+    }
+  </script>
+</body>
+</html>
